@@ -93,28 +93,29 @@ OverBar[x_]:=p2x[x2p[x]];
 SetAttributes[OverBar,Listable];
 positfix[i_Integer]:=If[i<npat/2,i+npat/2,i-npat/2];
 
-
 ringplot:=(
-	posits=
-		Table[Row[{Style[p2x[j], Purple],"      ",
-			Style[colorcodep[j], FontFamily->"Courier", FontWeight->Bold]}],
-		{j,0,npat-1}];
-	(* Set ComplexInfinity posit value as \[PlusMinus]\[Infinity] *)
-	posits[[x2p[ComplexInfinity]+1]]=
-		Row[{Style["\[PlusMinus]\[Infinity]", Purple],"      ",
-			Style[colorcodep[x2p[ComplexInfinity]],
-				FontFamily->"Courier", FontWeight->Bold]}];
+	nums=
+		Table[
+			Row[{Style[p2x[j]//InputForm, Purple]}],
+			{j,0,npat-1}];
+	nums[[x2p[ComplexInfinity]+1]]=
+		Row[{Style["\[PlusMinus]\[Infinity]", Purple]}];
+	bits=
+		Table[
+			Row[{Style[colorcodep[j], FontFamily->"Courier", FontWeight->Bold]}],
+			{j,0,npat-1}];
 	(* Plot the circle *)
-	Graphics[{Green,Thick,Circle[{0,0},1,{Pi/2-0.05, 0}],
+	Graphics[{RGBColor[0,0.75,0],Thick,Circle[{0,0},1,{Pi/2-0.05, 0}],
 		Circle[{0,0},1,{Pi/2+0.05, 2Pi}],
 		{Arrowheads[0.06],Arrow[{{0.2,0.98},{0.01,1}}]},
 		{Arrowheads[0.06],Arrow[{{-0.2,0.98},{-0.01,1}}]},
 		Black,PointSize[Large],Point[c=CirclePoints[{1,-Pi/2},npat]],
-		Table[Text[Style[StringRepeat[" ",4*nbits]posits[[i]],15],
-			c[[i]],Automatic,c[[i]]],{i,npat}]}]);
+		Table[{
+Text[Style[nums[[i]],15],c[[i]],Scaled[{2/(StringLength[ToString[nums[[i]]]]^0.35),.5}],c[[i]]], Text[Style[bits[[i]],15],c[[i]],Scaled[{-.1,.5}],c[[i]]],Text[Style[nums[[npat-i+1]],15],c[[-i]],Scaled[{-1/StringLength[ToString[nums[[npat-i+1]]]],.5}],-c[[-i]]],
+Text[Style[bits[[npat-i+1]],15],c[[-i]],Scaled[{1.1,.5}],-c[[-i]]]
+},{i,npat/2}]
+	}]
+);
 
 End[]
 EndPackage[]
-
-
-
