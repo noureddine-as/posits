@@ -37,6 +37,7 @@ class Net:
 
     def train(self, training_data, training_label, batch_size, epoch, weights_file):
         total_acc = 0
+        f = open("errors.txt","w+")
         for e in range(epoch):
             for batch_index in range(0, training_data.shape[0], batch_size):
                 # batch input
@@ -77,6 +78,11 @@ class Net:
                 batch_acc = acc/batch_size
                 training_acc = total_acc/(batch_index+batch_size)*(e+1)
                 print('=== Epoch: {0:d}/{1:d} === Iter:{2:d} === Loss: {3:.2f} === BAcc: {4:.2f} === TAcc: {5:.2f} === Remain: {6:d} Hrs {7:d} Mins {8:d} Secs ==='.format(e,epoch,batch_index+batch_size,loss,batch_acc,training_acc,int(hrs),int(mins),int(secs)))
+                ###
+                f.write("%f\r\n" % (loss))
+                ###
+        ###
+        f.close() 
         # dump weights and bias
         obj = []
         for i in range(self.lay_num):
